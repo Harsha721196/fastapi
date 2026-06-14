@@ -1,27 +1,33 @@
 from fastapi import FastAPI # type : ignore
 from fastapi.responses import HTMLResponse # type : ignore
+from fastapi.templating import Jinja2Templates
 
 
+templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 
 posts :list[dict] = [
     {
+        "id" : 1,
         "name" : "Tzuyu",
         "group" : "Twice",
         "leader" : "Jihyo"
     },
     {
+        "id" : 2,
         "name" : "Lisa",
         "group" : "BlackPink",
         "leader" : "NO-leader"
     },
     {
+        "id" : 3,
         "name" :"joy",
         "group" : "Red Velvet",
         "leader" : "Irene"
     },
 ]
 @app.get("/home",response_class = HTMLResponse)  # type :ignore
+
 def home():
     return f"""
     <h1>{posts[0]['name']}</h1>
@@ -57,4 +63,23 @@ def get_leaders():
     <br>
     <h1>{posts[2]['leader']} is leader of {posts[2]['group']}</h1>
     '''
+@app.get("/api/posts/{post_id}")
+def get_post(post_id: int):
+    for post in posts:
+        if post["id"] == post_id:
+            return post
+    return {"error": "post not found"}
 
+@app.get("/posts/{post_name}")
+def get_post(post_name: str):
+    for post in posts:
+        if post['name'] == post_name:
+            return post
+    return {"error": "post not found"}
+
+@app.get("/posts/{post_leader}")
+def get_posts(post_leader : str):
+    for post in posts:
+        if post['leader'] == post_leader:
+            return post
+    return { 'error' : 'not found  anything'}
