@@ -82,4 +82,4 @@ def get_posts(post_leader : str):
     for post in posts:
         if post['leader'] == post_leader:
             return post
-    return { 'error' : 'not found  anything'}
+    raise HTTPException(status_code=404, detail="post not found")
